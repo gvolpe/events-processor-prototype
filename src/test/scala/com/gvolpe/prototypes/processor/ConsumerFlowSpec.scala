@@ -47,10 +47,6 @@ class ConsumerFlowSpec extends TestKit(ActorSystem("consumerFlowSpec")) with Imp
         .toMat(Sink.head[Event])(Keep.both)
         .run()
 
-      println("RND >> " + randomJson)
-      println("RND >> " + randomJson)
-      println("RND >> " + randomJson)
-
       probe.sendNext(12)
       Await.ready(future, 500 millis)
       val e = future.value.get.get
