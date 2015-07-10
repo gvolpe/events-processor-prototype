@@ -12,12 +12,13 @@ import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
+import scala.concurrent.forkjoin.ThreadLocalRandom
 import scala.util.Try
 
 object ConsumerFlowSpec extends JsonMappingUtils[Event] {
 
   def randomJson: String = {
-    val n = (Math.random() * 10).toLong
+    val n = ThreadLocalRandom.current.nextInt(1000)
     s""" {"id":$n,"message":"Hello"} """
   }
 
@@ -45,6 +46,10 @@ class ConsumerFlowSpec extends TestKit(ActorSystem("consumerFlowSpec")) with Imp
         .via(events)
         .toMat(Sink.head[Event])(Keep.both)
         .run()
+
+      println("RND >> " + randomJson)
+      println("RND >> " + randomJson)
+      println("RND >> " + randomJson)
 
       probe.sendNext(12)
       Await.ready(future, 500 millis)
