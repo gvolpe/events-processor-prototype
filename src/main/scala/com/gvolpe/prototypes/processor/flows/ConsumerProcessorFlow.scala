@@ -2,6 +2,7 @@ package com.gvolpe.prototypes.processor.flows
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl._
+import akka.stream.scaladsl.FlowGraph.Implicits._
 import com.gvolpe.prototypes.processor.actors.Consumer.Event
 import com.gvolpe.prototypes.processor.http.AsyncWebClient
 import io.scalac.amqp.Connection
@@ -22,11 +23,7 @@ object ConsumerProcessorFlow extends JsonMappingUtils[Event] {
       AsyncWebClient get url map (_.concat(s"-$event"))
     }
 
-    FlowGraph.closed() { implicit builder: FlowGraph.Builder[Unit] =>
-      import FlowGraph.Implicits._
-
-      //val eventsJson = Source(eventsQueue) map (d => fromJson(d.message.body.utf8String))
-
+    FlowGraph.closed() { implicit builder =>
       // Ordered pipeline using mapAsync
       val eventsJson = Source(eventsQueue).mapAsync(100)(d => Future(fromJson(d.message.body.utf8String)))
 
