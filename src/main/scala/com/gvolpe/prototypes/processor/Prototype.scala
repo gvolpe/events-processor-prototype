@@ -2,7 +2,7 @@ package com.gvolpe.prototypes.processor
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import com.gvolpe.prototypes.processor.flows.{ConsumerFlow, EventsGeneratorFlow}
+import com.gvolpe.prototypes.processor.flows.{ConsumerProcessorFlow, ConsumerFlow, EventsGeneratorFlow}
 import io.scalac.amqp.Connection
 
 object Prototype extends App {
@@ -13,7 +13,8 @@ object Prototype extends App {
   val connection = Connection()
 
   EventsGeneratorFlow(connection).run()
-  ConsumerFlow(connection).run()
+  //ConsumerFlow(connection).run()
+  ConsumerProcessorFlow(connection).run()
 
   //JSON {"id":123456,"message":"hola"}
 
